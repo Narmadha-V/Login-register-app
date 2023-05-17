@@ -1,0 +1,80 @@
+<!DOCTYPE >
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./css/login.css" />
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form id="login">
+      <input
+        type="text"
+        autocomplete="off"
+        id="username"
+        class="inputbox"
+        placeholder="Username"
+      />
+      <input
+        type="password"
+        autocomplete="off"
+        id="password"
+        class="inputbox"
+        placeholder="password"
+      />
+      <input type="submit" id="submit-btn" value="Login" />
+      <a href="./password.html" class="side-link">change Password</a>
+    </form>
+    <script>
+      const form = document.getElementById("login");
+      form.addEventListener("submit", login);
+
+      async function login(e) {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        if (!username || !password) {
+          alert("Please enter both username and password.");
+          return;
+        }
+
+        if (localStorage.getItem("token")) {
+          // Redirect to the home page
+          window.location.href = "/home.html";
+        }
+        const login = (username, password) => {};
+        const result = await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        }).then((result) => {
+          console.log("Server response:", result);
+          return result.json();
+        });
+
+        if (result.status === "success") {
+          console.log("Setting token in localStorage:", result.data);
+          localStorage.setItem("token", result.data);
+          localStorage.setItem("user", JSON.stringify(result.username));
+          console.log(
+            "user set in localStorage:",
+            localStorage.getItem("user")
+          );
+          alert("You are logged in");
+        } else {
+          alert(result.error);
+        }
+      }
+      function isValidPassword(password) {
+        return password.length >= 4;
+      }
+    </script>
+  </body>
+</html>

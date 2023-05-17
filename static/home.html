@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home Page</title>
+    <link rel="stylesheet" href="./css/home.css" />
+  </head>
+
+  <body>
+    <h1>Dashboard</h1>
+
+    <form id="login">
+      <h2 id="header">Welcome <span id="username"></span>!!</h2>
+      <button onclick="logout()" id="submit-btn">Logout</button>
+    </form>
+    <script>
+      function logout() {
+        // Redirect the user back to the login page
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        console.log("User logged out");
+        window.location.href = "/login.html";
+      }
+      const isLoggedIn = !!localStorage.getItem("token");
+      console.log(isLoggedIn);
+
+      if (!localStorage.getItem("token")) {
+        window.location.href = "/login.html";
+      } else {
+        let user;
+        try {
+          user = JSON.parse(localStorage.getItem("user"));
+        } catch (error) {
+          console.error("Error parsing user from localStorage", error);
+        }
+        if (user) {
+          console.log(user);
+          document.getElementById("username").innerText = user;
+        } else {
+          console.error("User not found in localStorage");
+        }
+      }
+    </script>
+  </body>
+</html>

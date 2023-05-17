@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/index.css" />
+  </head>
+  <body>
+    <h1>Registration</h1>
+    <form id="reg-form">
+      <input
+        type="text"
+        autocomplete="off"
+        id="username"
+        class="inputbox"
+        placeholder="Username"
+      />
+      <input
+        type="password"
+        autocomplete="off"
+        id="password"
+        class="inputbox"
+        placeholder="password"
+      />
+      <p>
+        Already have a account ?
+        <a href="./login.html" class="side-link">LognIn</a>
+      </p>
+      <input type="submit" id="submit-btn" value="sign up" />
+    </form>
+    <script>
+      const form = document.getElementById("reg-form");
+      form.addEventListener("submit", registerUser);
+      async function registerUser(e) {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        if (!username || !password) {
+          alert("Please enter both username and password.");
+          return;
+        }
+        const result = await fetch("/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        }).then((res) => res.json());
+
+        if (result.status === "ok") {
+          alert("You are registered!!");
+        } else {
+          alert("username already exists");
+        }
+      }
+    </script>
+  </body>
+</html>
